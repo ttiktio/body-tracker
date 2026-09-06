@@ -1,11 +1,192 @@
 <!doctype html>
 <html lang="th">
-<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/><meta name="theme-color" content="#111111"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/><meta name="apple-mobile-web-app-title" content="Body Tracker"/><title>Body Tracker</title><link rel="manifest" href="./manifest.json"/><link rel="apple-touch-icon" href="./icon-192.svg"/><link rel="stylesheet" href="./style.css"/></head>
-<body><div class="app-shell"><header class="topbar"><div><div class="eyebrow">BODY</div><h1>Progress Tracker</h1></div><button id="installBtn" class="ghost hidden">Install</button></header><main>
-<section id="homePage" class="page active"><div class="hero-card"><div class="hero-label">BODY FAT</div><div id="heroBodyFat" class="hero-value">--%</div><div id="heroBodyFatChange" class="hero-change">ยังไม่มีข้อมูล</div></div><div class="metric-grid"><div class="metric-card"><span>Weight</span><strong id="homeWeight">-- kg</strong></div><div class="metric-card"><span>Waist</span><strong id="homeWaist">-- in</strong></div><div class="metric-card"><span>BMI</span><strong id="homeBmi">--</strong></div><div class="metric-card"><span>Lean mass</span><strong id="homeLeanMass">-- kg</strong></div></div><div class="section-card"><div class="section-head"><h2>Progress</h2><select id="homeChartMetric" class="select"><option value="weight">Weight</option><option value="bodyFat">Body Fat</option><option value="waist">Waist</option></select></div><canvas id="homeChart" height="220"></canvas></div><button class="primary big" data-go="add">+ Add measurement</button></section>
-<section id="addPage" class="page"><div class="page-title-row"><div><div class="eyebrow">NEW</div><h2>Measurement</h2></div></div><form id="measurementForm" class="form-card"><div class="form-grid"><label>Date<input id="date" type="date" required/></label><label>Weight (kg)<input id="weight" type="number" step="0.1" min="20" max="400" placeholder="92.4" required/></label><label>Waist (in)<input id="waist" type="number" step="0.1" min="8" max="120" placeholder="37.8" required/></label><label>Neck (in)<input id="neck" type="number" step="0.1" min="4" max="40" placeholder="15.4" required/></label><label class="female-only hidden">Hip (in)<input id="hip" type="number" step="0.1" min="8" max="120" placeholder="39.8"/></label><label>Chest (in)<input id="chest" type="number" step="0.1" min="8" max="120" placeholder="41.3"/></label><label>Arm (in)<input id="arm" type="number" step="0.1" min="4" max="40" placeholder="14.6"/></label><label>Thigh (in)<input id="thigh" type="number" step="0.1" min="4" max="60" placeholder="23.2"/></label></div><div class="calc-preview"><div><span>Estimated body fat</span><strong id="previewBodyFat">--%</strong></div><div><span>Lean mass</span><strong id="previewLeanMass">-- kg</strong></div><div><span>Fat mass</span><strong id="previewFatMass">-- kg</strong></div></div><p class="note">%Body Fat เป็นค่าประมาณจากสูตร U.S. Navy โดยกรอกส่วนสูงและรอบสัดส่วนเป็นนิ้ว ไม่ใช่ผลตรวจทางการแพทย์</p><button type="submit" class="primary big">Save measurement</button></form></section>
-<section id="historyPage" class="page"><div class="page-title-row"><div><div class="eyebrow">YOUR</div><h2>History</h2></div></div><div id="historyList" class="history-list"></div></section>
-<section id="chartsPage" class="page"><div class="page-title-row"><div><div class="eyebrow">YOUR</div><h2>Charts</h2></div></div><div class="section-card"><div class="section-head"><select id="chartMetric" class="select"><option value="weight">Weight</option><option value="bodyFat">Body Fat</option><option value="waist">Waist</option><option value="chest">Chest</option><option value="arm">Arm</option><option value="thigh">Thigh</option></select><select id="chartRange" class="select"><option value="30">1M</option><option value="90">3M</option><option value="180">6M</option><option value="365">1Y</option><option value="all">ALL</option></select></div><canvas id="mainChart" height="260"></canvas><div id="chartSummary" class="chart-summary">ยังไม่มีข้อมูล</div></div></section>
-<section id="settingsPage" class="page"><div class="page-title-row"><div><div class="eyebrow">APP</div><h2>Settings</h2></div></div><div class="form-card"><label>Height (in)<input id="height" type="number" step="0.1" min="36" max="100" placeholder="72"/></label><label>Sex for U.S. Navy formula<select id="sex" class="select full"><option value="male">Male</option><option value="female">Female</option></select></label><button id="saveSettings" class="primary">Save settings</button></div><div class="section-card"><h3>Data</h3><button id="exportBtn" class="secondary">Export backup</button><label class="secondary file-button">Import backup<input id="importInput" type="file" accept="application/json" hidden/></label><button id="deleteAllBtn" class="danger">Delete all data</button></div><div class="section-card"><h3>Privacy</h3><p class="note">ข้อมูลสัดส่วนถูกเก็บในอุปกรณ์นี้ผ่าน localStorage และไม่ถูกส่งไปยัง GitHub หรือเซิร์ฟเวอร์ของแอป</p></div></section>
-</main><nav class="bottom-nav"><button data-page="home" class="nav-btn active">Home</button><button data-page="history" class="nav-btn">History</button><button data-page="add" class="nav-btn nav-add">+</button><button data-page="charts" class="nav-btn">Charts</button><button data-page="settings" class="nav-btn">Settings</button></nav></div>
-<dialog id="editDialog"><form method="dialog" class="dialog-card"><h3>Edit measurement</h3><input id="editId" type="hidden"/><label>Date <input id="editDate" type="date"/></label><label>Weight (kg) <input id="editWeight" type="number" step="0.1"/></label><label>Waist (in) <input id="editWaist" type="number" step="0.1"/></label><label>Neck (in) <input id="editNeck" type="number" step="0.1"/></label><label id="editHipWrap" class="hidden">Hip (in) <input id="editHip" type="number" step="0.1"/></label><label>Chest (in) <input id="editChest" type="number" step="0.1"/></label><label>Arm (in) <input id="editArm" type="number" step="0.1"/></label><label>Thigh (in) <input id="editThigh" type="number" step="0.1"/></label><div class="dialog-actions"><button value="cancel" class="secondary">Cancel</button><button id="saveEditBtn" value="default" class="primary">Save</button></div></form></dialog><script src="./app.js"></script><script src="./units.js"></script></body></html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#111111" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Body Tracker" />
+  <title>Body Tracker</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="apple-touch-icon" href="./icon-192.svg" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+<div class="app-shell">
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">BODY</div>
+      <h1 data-i18n="appTitle">Progress Tracker</h1>
+    </div>
+    <div class="top-actions">
+      <button id="langToggle" class="ghost lang-toggle" type="button" aria-label="Switch language">EN</button>
+      <button id="installBtn" class="ghost hidden" type="button" data-i18n="install">Install</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="homePage" class="page active">
+      <div class="hero-card">
+        <div class="hero-label" data-i18n="bodyFat">BODY FAT</div>
+        <div id="heroBodyFat" class="hero-value">--%</div>
+        <div id="heroBodyFatChange" class="hero-change">ยังไม่มีข้อมูล</div>
+      </div>
+
+      <div class="metric-grid">
+        <div class="metric-card"><span data-i18n="weight">Weight</span><strong id="homeWeight">-- kg</strong></div>
+        <div class="metric-card"><span data-i18n="waist">Waist</span><strong id="homeWaist">-- in</strong></div>
+        <div class="metric-card"><span>BMI</span><strong id="homeBmi">--</strong></div>
+        <div class="metric-card"><span data-i18n="leanMass">Lean mass</span><strong id="homeLeanMass">-- kg</strong></div>
+      </div>
+
+      <div class="section-card">
+        <div class="section-head">
+          <h2 data-i18n="progress">Progress</h2>
+          <select id="homeChartMetric" class="select">
+            <option value="weight" data-i18n="weight">Weight</option>
+            <option value="bodyFat" data-i18n="bodyFatTitle">Body Fat</option>
+            <option value="waist" data-i18n="waist">Waist</option>
+          </select>
+        </div>
+        <canvas id="homeChart" height="220"></canvas>
+      </div>
+      <button class="primary big" data-go="add" type="button" data-i18n="addMeasurement">+ Add measurement</button>
+    </section>
+
+    <section id="addPage" class="page">
+      <div class="page-title-row">
+        <div><div class="eyebrow" data-i18n="new">NEW</div><h2 data-i18n="measurement">Measurement</h2></div>
+      </div>
+
+      <div class="section-card guide-card">
+        <div class="section-head guide-head">
+          <div>
+            <h2 data-i18n="measurementGuide">Measurement Guide</h2>
+            <p class="guide-subtitle" data-i18n="guideSubtitle">Tap a body part, then rotate the model.</p>
+          </div>
+          <span class="guide-badge">3D</span>
+        </div>
+
+        <div class="body-guide-layout">
+          <div class="body-stage">
+            <canvas id="bodyGuideCanvas" aria-label="3D body measurement guide"></canvas>
+            <div class="rotate-hint" data-i18n="dragRotate">Drag to rotate</div>
+          </div>
+          <div class="guide-info">
+            <div id="guidePartTitle" class="guide-title">Waist</div>
+            <p id="guidePartText" class="guide-text"></p>
+            <div class="guide-tags">
+              <span id="guideUnitTag">in</span>
+              <span id="guideUseTag"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="guide-chips" id="guideChips">
+          <button type="button" class="guide-chip" data-guide="neck" data-i18n="neck">Neck</button>
+          <button type="button" class="guide-chip" data-guide="chest" data-i18n="chest">Chest</button>
+          <button type="button" class="guide-chip active" data-guide="waist" data-i18n="waist">Waist</button>
+          <button type="button" class="guide-chip" data-guide="hip" data-i18n="hip">Hip</button>
+          <button type="button" class="guide-chip" data-guide="arm" data-i18n="arm">Arm</button>
+          <button type="button" class="guide-chip" data-guide="thigh" data-i18n="thigh">Thigh</button>
+        </div>
+      </div>
+
+      <form id="measurementForm" class="form-card">
+        <div class="form-grid">
+          <label><span data-i18n="date">Date</span><input id="date" type="date" required /></label>
+          <label><span><span data-i18n="weight">Weight</span> (kg)</span><input id="weight" type="number" step="0.1" min="20" max="400" placeholder="92.4" required /></label>
+          <label class="measure-label"><span><span data-i18n="waist">Waist</span> (in)</span><button type="button" class="where-btn" data-show-guide="waist" data-i18n="where">Where?</button><input id="waist" type="number" step="0.1" min="8" max="120" placeholder="37.8" required /></label>
+          <label class="measure-label"><span><span data-i18n="neck">Neck</span> (in)</span><button type="button" class="where-btn" data-show-guide="neck" data-i18n="where">Where?</button><input id="neck" type="number" step="0.1" min="4" max="40" placeholder="15.4" required /></label>
+          <label class="female-only hidden measure-label"><span><span data-i18n="hip">Hip</span> (in)</span><button type="button" class="where-btn" data-show-guide="hip" data-i18n="where">Where?</button><input id="hip" type="number" step="0.1" min="8" max="120" placeholder="39.8" /></label>
+          <label class="measure-label"><span><span data-i18n="chest">Chest</span> (in)</span><button type="button" class="where-btn" data-show-guide="chest" data-i18n="where">Where?</button><input id="chest" type="number" step="0.1" min="8" max="120" placeholder="41.3" /></label>
+          <label class="measure-label"><span><span data-i18n="arm">Arm</span> (in)</span><button type="button" class="where-btn" data-show-guide="arm" data-i18n="where">Where?</button><input id="arm" type="number" step="0.1" min="4" max="40" placeholder="14.6" /></label>
+          <label class="measure-label"><span><span data-i18n="thigh">Thigh</span> (in)</span><button type="button" class="where-btn" data-show-guide="thigh" data-i18n="where">Where?</button><input id="thigh" type="number" step="0.1" min="4" max="60" placeholder="23.2" /></label>
+        </div>
+
+        <div class="calc-preview">
+          <div><span data-i18n="estimatedBodyFat">Estimated body fat</span><strong id="previewBodyFat">--%</strong></div>
+          <div><span data-i18n="leanMass">Lean mass</span><strong id="previewLeanMass">-- kg</strong></div>
+          <div><span data-i18n="fatMass">Fat mass</span><strong id="previewFatMass">-- kg</strong></div>
+        </div>
+        <p class="note" data-i18n="formulaNote">% Body Fat is an estimate using the U.S. Navy formula. Height is entered in cm; circumferences are entered in inches.</p>
+        <button type="submit" class="primary big" data-i18n="saveMeasurement">Save measurement</button>
+      </form>
+    </section>
+
+    <section id="historyPage" class="page">
+      <div class="page-title-row"><div><div class="eyebrow" data-i18n="your">YOUR</div><h2 data-i18n="history">History</h2></div></div>
+      <div id="historyList" class="history-list"></div>
+    </section>
+
+    <section id="chartsPage" class="page">
+      <div class="page-title-row"><div><div class="eyebrow" data-i18n="your">YOUR</div><h2 data-i18n="charts">Charts</h2></div></div>
+      <div class="section-card">
+        <div class="section-head">
+          <select id="chartMetric" class="select">
+            <option value="weight" data-i18n="weight">Weight</option>
+            <option value="bodyFat" data-i18n="bodyFatTitle">Body Fat</option>
+            <option value="waist" data-i18n="waist">Waist</option>
+            <option value="chest" data-i18n="chest">Chest</option>
+            <option value="arm" data-i18n="arm">Arm</option>
+            <option value="thigh" data-i18n="thigh">Thigh</option>
+          </select>
+          <select id="chartRange" class="select"><option value="30">1M</option><option value="90">3M</option><option value="180">6M</option><option value="365">1Y</option><option value="all">ALL</option></select>
+        </div>
+        <canvas id="mainChart" height="260"></canvas>
+        <div id="chartSummary" class="chart-summary"></div>
+      </div>
+    </section>
+
+    <section id="settingsPage" class="page">
+      <div class="page-title-row"><div><div class="eyebrow" data-i18n="app">APP</div><h2 data-i18n="settings">Settings</h2></div></div>
+      <div class="form-card">
+        <label><span><span data-i18n="height">Height</span> (cm)</span><input id="height" type="number" step="0.1" min="100" max="250" placeholder="175" /></label>
+        <label><span data-i18n="sexFormula">Sex for U.S. Navy formula</span>
+          <select id="sex" class="select full"><option value="male" data-i18n="male">Male</option><option value="female" data-i18n="female">Female</option></select>
+        </label>
+        <button id="saveSettings" class="primary" type="button" data-i18n="saveSettings">Save settings</button>
+      </div>
+      <div class="section-card">
+        <h3 data-i18n="data">Data</h3>
+        <button id="exportBtn" class="secondary" type="button" data-i18n="exportBackup">Export backup</button>
+        <label class="secondary file-button"><span data-i18n="importBackup">Import backup</span><input id="importInput" type="file" accept="application/json" hidden /></label>
+        <button id="deleteAllBtn" class="danger" type="button" data-i18n="deleteAll">Delete all data</button>
+      </div>
+      <div class="section-card">
+        <h3 data-i18n="privacy">Privacy</h3>
+        <p class="note" data-i18n="privacyNote">Measurements are stored locally on this device and are not sent to GitHub or an app server.</p>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button data-page="home" class="nav-btn active" type="button" data-i18n="home">Home</button>
+    <button data-page="history" class="nav-btn" type="button" data-i18n="history">History</button>
+    <button data-page="add" class="nav-btn nav-add" type="button">+</button>
+    <button data-page="charts" class="nav-btn" type="button" data-i18n="charts">Charts</button>
+    <button data-page="settings" class="nav-btn" type="button" data-i18n="settings">Settings</button>
+  </nav>
+</div>
+
+<dialog id="editDialog">
+  <form method="dialog" class="dialog-card">
+    <h3 data-i18n="editMeasurement">Edit measurement</h3>
+    <input id="editId" type="hidden" />
+    <label><span data-i18n="date">Date</span><input id="editDate" type="date" /></label>
+    <label><span><span data-i18n="weight">Weight</span> (kg)</span><input id="editWeight" type="number" step="0.1" /></label>
+    <label><span><span data-i18n="waist">Waist</span> (in)</span><input id="editWaist" type="number" step="0.1" /></label>
+    <label><span><span data-i18n="neck">Neck</span> (in)</span><input id="editNeck" type="number" step="0.1" /></label>
+    <label id="editHipWrap" class="hidden"><span><span data-i18n="hip">Hip</span> (in)</span><input id="editHip" type="number" step="0.1" /></label>
+    <label><span><span data-i18n="chest">Chest</span> (in)</span><input id="editChest" type="number" step="0.1" /></label>
+    <label><span><span data-i18n="arm">Arm</span> (in)</span><input id="editArm" type="number" step="0.1" /></label>
+    <label><span><span data-i18n="thigh">Thigh</span> (in)</span><input id="editThigh" type="number" step="0.1" /></label>
+    <div class="dialog-actions"><button value="cancel" class="secondary" data-i18n="cancel">Cancel</button><button id="saveEditBtn" value="default" class="primary" data-i18n="save">Save</button></div>
+  </form>
+</dialog>
+
+<script src="./body3d.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>
