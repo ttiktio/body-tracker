@@ -127,4 +127,13 @@
     };
   }
   window.BodyGuide3D={create};
+
+  // Load the V3 enhancement only after app.js has initialized its base globals.
+  document.addEventListener('DOMContentLoaded',()=>{
+    if(document.querySelector('script[data-body-v3]')) return;
+    const script=document.createElement('script');
+    script.src='./units.js';
+    script.dataset.bodyV3='true';
+    document.body.appendChild(script);
+  });
 })();
