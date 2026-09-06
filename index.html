@@ -3,21 +3,21 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#111111" />
+  <meta name="theme-color" content="#111715" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Body Tracker" />
-  <title>Body Tracker</title>
+  <title>Body Tracker — Your progress, in perspective</title>
+  <meta name="description" content="บันทึกสัดส่วน ติดตามความเปลี่ยนแปลง และเรียนรู้วิธีวัดด้วยคู่มือร่างกาย 3D" />
   <link rel="manifest" href="./manifest.json" />
   <link rel="apple-touch-icon" href="./icon-192.svg" />
-  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./style.css?v=5" />
 </head>
 <body>
 <div class="app-shell">
   <header class="topbar">
     <div>
-      <div class="eyebrow">BODY</div>
-      <h1 data-i18n="appTitle">Progress Tracker</h1>
+      <a class="brand" href="./" aria-label="Body Tracker"><span class="brand-mark" aria-hidden="true">b.</span><span>body<span class="brand-light">tracker</span><small>PERSONAL BODY JOURNAL</small></span></a>
     </div>
     <div class="top-actions">
       <button id="langToggle" class="ghost lang-toggle" type="button" aria-label="Switch language">EN</button>
@@ -27,10 +27,14 @@
 
   <main>
     <section id="homePage" class="page active">
+      <div class="page-title-row"><div><div class="eyebrow" data-i18n="overview">YOUR OVERVIEW</div><h1 data-i18n="appTitle">Progress Tracker</h1></div><button class="primary desktop-add" data-go="add" data-i18n="addMeasurement" type="button">+ Add measurement</button></div>
+      <div class="overview-grid">
       <div class="hero-card">
+        <div class="hero-top"><span class="tiny-label" data-i18n="latestMeasurement">LATEST MEASUREMENT</span><span class="hero-symbol" aria-hidden="true">↗</span></div>
         <div class="hero-label" data-i18n="bodyFat">BODY FAT</div>
         <div id="heroBodyFat" class="hero-value">--%</div>
         <div id="heroBodyFatChange" class="hero-change">ยังไม่มีข้อมูล</div>
+        <div class="hero-footer"><span data-i18n="estimateLabel">U.S. Navy estimate</span><span>01 / BODY COMPOSITION</span></div>
       </div>
 
       <div class="metric-grid">
@@ -40,7 +44,8 @@
         <div class="metric-card"><span data-i18n="leanMass">Lean mass</span><strong id="homeLeanMass">-- kg</strong></div>
       </div>
 
-      <div class="section-card">
+      </div>
+      <div class="section-card progress-card">
         <div class="section-head">
           <h2 data-i18n="progress">Progress</h2>
           <select id="homeChartMetric" class="select">
@@ -56,25 +61,44 @@
 
     <section id="addPage" class="page">
       <div class="page-title-row">
-        <div><div class="eyebrow" data-i18n="new">NEW</div><h2 data-i18n="measurement">Measurement</h2></div>
+        <div><div class="eyebrow" data-i18n="new">NEW ENTRY</div><h2 data-i18n="measurement">Measurement</h2></div>
       </div>
 
+      <div class="measurement-workspace">
       <div class="section-card guide-card">
         <div class="section-head guide-head">
           <div>
             <h2 data-i18n="measurementGuide">Measurement Guide</h2>
             <p class="guide-subtitle" data-i18n="guideSubtitle">Tap a body part, then rotate the model.</p>
           </div>
-          <span class="guide-badge">3D</span>
+          <span class="guide-badge" data-i18n="anatomyBadge">ANATOMY</span>
         </div>
 
         <div class="body-guide-layout">
-          <div class="body-stage">
-            <canvas id="bodyGuideCanvas" aria-label="3D body measurement guide"></canvas>
-            <div class="rotate-hint" data-i18n="dragRotate">Drag to rotate</div>
+          <div class="body-stage anatomy-stage" id="anatomyGuide" data-part="waist" data-sex="male" role="group" aria-label="Anatomy measurement guide">
+            <div class="stage-header"><span data-i18n="anatomyModel">ANATOMY GUIDE</span><span id="stagePartLabel">WAIST</span></div>
+            <div class="anatomy-viewport" id="anatomyViewport">
+              <div class="anatomy-figure" id="anatomyFigure">
+                <img id="anatomyImage" src="./assets/anatomy-reference.jpg" width="1008" height="1792" alt="Full-body anatomical illustration" draggable="false" decoding="async" />
+                <svg id="anatomyOverlay" viewBox="0 0 1008 1792" aria-hidden="true" focusable="false">
+                  <ellipse id="tapeBack" fill="none" stroke="#13786c" stroke-width="5" stroke-dasharray="9 7" opacity=".55" />
+                  <ellipse id="tapeBand" fill="#3bc7af" fill-opacity=".12" stroke="none" />
+                  <path id="tapeFront" fill="none" stroke="#11786c" stroke-width="9" stroke-linecap="round" />
+                  <path id="tapeLeader" fill="none" stroke="#11786c" stroke-width="3" />
+                  <circle id="tapeDot" r="6" fill="#11786c" />
+                </svg>
+                <span id="anatomyCallout" class="anatomy-callout" aria-hidden="true">Waist</span>
+                <div id="anatomyHotspots"></div>
+              </div>
+            </div>
+            <div id="modelStatus" class="model-status" role="status" aria-live="polite"><span class="loader"></span><span id="modelStatusText" data-i18n="loadingModel">Loading anatomy illustration…</span><button id="retryModel" class="secondary hidden" type="button" data-i18n="retryModel">Try again</button></div>
+            <div class="anatomy-controls" role="group" aria-label="Image zoom">
+              <span data-i18n="anatomyHint">Select a measurement to see the tape position</span>
+              <div><button id="anatomyZoomOut" type="button" aria-label="Zoom out">−</button><button id="anatomyZoomReset" type="button" aria-label="Reset zoom">1×</button><button id="anatomyZoomIn" type="button" aria-label="Zoom in">+</button></div>
+            </div>
           </div>
           <div class="guide-info">
-            <div id="guidePartTitle" class="guide-title">Waist</div>
+            <div class="guide-info-top"><span class="guide-step" id="guideStep">03</span><div id="guidePartTitle" class="guide-title">Waist</div><span class="guide-tape" aria-hidden="true">↔</span></div>
             <p id="guidePartText" class="guide-text"></p>
             <div class="guide-tags">
               <span id="guideUnitTag">in</span>
@@ -91,18 +115,20 @@
           <button type="button" class="guide-chip" data-guide="arm" data-i18n="arm">Arm</button>
           <button type="button" class="guide-chip" data-guide="thigh" data-i18n="thigh">Thigh</button>
         </div>
+        <p class="model-note" data-i18n="modelNote">Reference model for measurement placement, not a scan of your body.</p>
       </div>
 
       <form id="measurementForm" class="form-card">
+        <div class="form-heading"><div><div class="eyebrow" data-i18n="yourMeasurements">YOUR MEASUREMENTS</div><h3 data-i18n="recordToday">Record today</h3></div><span class="units-badge">kg / in</span></div>
         <div class="form-grid">
           <label><span data-i18n="date">Date</span><input id="date" type="date" required /></label>
           <label><span><span data-i18n="weight">Weight</span> (kg)</span><input id="weight" type="number" step="0.1" min="20" max="400" placeholder="92.4" required /></label>
-          <label class="measure-label"><span><span data-i18n="waist">Waist</span> (in)</span><button type="button" class="where-btn" data-show-guide="waist" data-i18n="where">Where?</button><input id="waist" type="number" step="0.1" min="8" max="120" placeholder="37.8" required /></label>
-          <label class="measure-label"><span><span data-i18n="neck">Neck</span> (in)</span><button type="button" class="where-btn" data-show-guide="neck" data-i18n="where">Where?</button><input id="neck" type="number" step="0.1" min="4" max="40" placeholder="15.4" required /></label>
-          <label class="female-only hidden measure-label"><span><span data-i18n="hip">Hip</span> (in)</span><button type="button" class="where-btn" data-show-guide="hip" data-i18n="where">Where?</button><input id="hip" type="number" step="0.1" min="8" max="120" placeholder="39.8" /></label>
-          <label class="measure-label"><span><span data-i18n="chest">Chest</span> (in)</span><button type="button" class="where-btn" data-show-guide="chest" data-i18n="where">Where?</button><input id="chest" type="number" step="0.1" min="8" max="120" placeholder="41.3" /></label>
-          <label class="measure-label"><span><span data-i18n="arm">Arm</span> (in)</span><button type="button" class="where-btn" data-show-guide="arm" data-i18n="where">Where?</button><input id="arm" type="number" step="0.1" min="4" max="40" placeholder="14.6" /></label>
-          <label class="measure-label"><span><span data-i18n="thigh">Thigh</span> (in)</span><button type="button" class="where-btn" data-show-guide="thigh" data-i18n="where">Where?</button><input id="thigh" type="number" step="0.1" min="4" max="60" placeholder="23.2" /></label>
+          <div class="measure-label"><label for="waist"><span><span data-i18n="waist">Waist</span> (in)</span></label><button type="button" class="where-btn" data-show-guide="waist" data-i18n="where">Where?</button><input id="waist" type="number" step="0.1" min="8" max="120" placeholder="37.8" required /></div>
+          <div class="measure-label"><label for="neck"><span><span data-i18n="neck">Neck</span> (in)</span></label><button type="button" class="where-btn" data-show-guide="neck" data-i18n="where">Where?</button><input id="neck" type="number" step="0.1" min="4" max="40" placeholder="15.4" required /></div>
+          <div class="female-only hidden measure-label"><label for="hip"><span><span data-i18n="hip">Hip</span> (in)</span></label><button type="button" class="where-btn" data-show-guide="hip" data-i18n="where">Where?</button><input id="hip" type="number" step="0.1" min="8" max="120" placeholder="39.8" /></div>
+          <div class="measure-label"><label for="chest"><span><span data-i18n="chest">Chest</span> (in)</span></label><button type="button" class="where-btn" data-show-guide="chest" data-i18n="where">Where?</button><input id="chest" type="number" step="0.1" min="8" max="120" placeholder="41.3" /></div>
+          <div class="measure-label"><label for="arm"><span><span data-i18n="arm">Arm</span> (in)</span></label><button type="button" class="where-btn" data-show-guide="arm" data-i18n="where">Where?</button><input id="arm" type="number" step="0.1" min="4" max="40" placeholder="14.6" /></div>
+          <div class="measure-label"><label for="thigh"><span><span data-i18n="thigh">Thigh</span> (in)</span></label><button type="button" class="where-btn" data-show-guide="thigh" data-i18n="where">Where?</button><input id="thigh" type="number" step="0.1" min="4" max="60" placeholder="23.2" /></div>
         </div>
 
         <div class="calc-preview">
@@ -113,6 +139,7 @@
         <p class="note" data-i18n="formulaNote">% Body Fat is an estimate using the U.S. Navy formula. Height is entered in cm; circumferences are entered in inches.</p>
         <button type="submit" class="primary big" data-i18n="saveMeasurement">Save measurement</button>
       </form>
+      </div>
     </section>
 
     <section id="historyPage" class="page">
@@ -161,13 +188,7 @@
     </section>
   </main>
 
-  <nav class="bottom-nav">
-    <button data-page="home" class="nav-btn active" type="button" data-i18n="home">Home</button>
-    <button data-page="history" class="nav-btn" type="button" data-i18n="history">History</button>
-    <button data-page="add" class="nav-btn nav-add" type="button">+</button>
-    <button data-page="charts" class="nav-btn" type="button" data-i18n="charts">Charts</button>
-    <button data-page="settings" class="nav-btn" type="button" data-i18n="settings">Settings</button>
-  </nav>
+  <nav class="bottom-nav" aria-label="Main navigation"><button data-page="home" class="nav-btn active" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span data-i18n="home">Home</span></button><button data-page="history" class="nav-btn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span data-i18n="history">History</span></button><button data-page="add" class="nav-btn nav-add" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span data-i18n="measurement">Add</span></button><button data-page="charts" class="nav-btn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4v16h16M7 15l4-5 4 3 5-7"/></svg><span data-i18n="charts">Charts</span></button><button data-page="settings" class="nav-btn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3"/><circle cx="16" cy="17" r="3"/></svg><span data-i18n="settings">Settings</span></button></nav>
 </div>
 
 <dialog id="editDialog">
@@ -186,7 +207,8 @@
   </form>
 </dialog>
 
-<script src="./body3d.js"></script>
-<script src="./app.js"></script>
+<script src="./app.js?v=5"></script>
+<script src="./units.js?v=5"></script>
+<script src="./studio.js?v=5"></script>
 </body>
 </html>

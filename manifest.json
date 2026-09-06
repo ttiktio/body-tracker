@@ -4,8 +4,8 @@
   "description": "Local-first body measurement and body fat tracker",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#0b0b0c",
-  "theme_color": "#111111",
+  "background_color": "#101512",
+  "theme_color": "#111715",
   "icons": [
     {
       "src": "./icon-192.svg",

@@ -92,6 +92,7 @@ function showPage(name){
   if(name==="charts") renderMainChart();
   if(name==="settings") renderSettings();
   if(name==="add") prepareAdd();
+  document.querySelectorAll("[data-page]").forEach(button=>button.setAttribute("aria-current",button.dataset.page===name?"page":"false"));
 }
 
 function prepareAdd(){
@@ -219,7 +220,8 @@ function drawChart(canvas, metric, range){
   const ctx=canvas.getContext("2d");
   const dpr=window.devicePixelRatio||1;
   const cssW=canvas.clientWidth||320;
-  const cssH=canvas.getAttribute("height")?Number(canvas.getAttribute("height")):220;
+  const cssH=Number(canvas.dataset.chartHeight)||(canvas.id==="mainChart"?260:220);
+  canvas.dataset.chartHeight=cssH;
   canvas.width=cssW*dpr;
   canvas.height=cssH*dpr;
   ctx.setTransform(dpr,0,0,dpr,0,0);
@@ -383,6 +385,7 @@ $("exportBtn").addEventListener("click",()=>{
   const payload={
     app:"Body Tracker",
     version:1,
+    units:{height:"cm",circumferences:"in",weight:"kg"},
     exportedAt:new Date().toISOString(),
     settings,
     measurements
