@@ -11,7 +11,7 @@
   <meta name="description" content="บันทึกสัดส่วน ติดตามความเปลี่ยนแปลง และเรียนรู้วิธีวัดด้วยคู่มือร่างกาย 3D" />
   <link rel="manifest" href="./manifest.json" />
   <link rel="apple-touch-icon" href="./icon-192.svg" />
-  <link rel="stylesheet" href="./style.css?v=4" />
+  <link rel="stylesheet" href="./style.css?v=5" />
 </head>
 <body>
 <div class="app-shell">
@@ -71,19 +71,31 @@
             <h2 data-i18n="measurementGuide">Measurement Guide</h2>
             <p class="guide-subtitle" data-i18n="guideSubtitle">Tap a body part, then rotate the model.</p>
           </div>
-          <span class="guide-badge">3D / 360°</span>
+          <span class="guide-badge" data-i18n="anatomyBadge">ANATOMY</span>
         </div>
 
         <div class="body-guide-layout">
-          <div class="body-stage">
-            <div class="stage-header"><span data-i18n="anatomyModel">ANATOMY MODEL</span><span id="stagePartLabel">WAIST</span></div>
-            <canvas id="bodyGuideCanvas" tabindex="0" aria-label="3D body measurement guide"></canvas>
-            <div id="modelStatus" class="model-status" role="status" aria-live="polite"><span class="loader"></span><span id="modelStatusText" data-i18n="loadingModel">Loading body model…</span><button id="retryModel" class="secondary hidden" type="button" data-i18n="retryModel">Try again</button></div>
-            <div class="view-controls" role="group" aria-label="Model view">
-              <button type="button" data-view="front" data-i18n="frontView">Front</button><button type="button" data-view="side" data-i18n="sideView">Side</button><button type="button" data-view="back" data-i18n="backView">Back</button>
-              <button id="autoRotate" type="button" aria-pressed="false" data-i18n="autoRotate">Rotate</button>
+          <div class="body-stage anatomy-stage" id="anatomyGuide" data-part="waist" data-sex="male" role="group" aria-label="Anatomy measurement guide">
+            <div class="stage-header"><span data-i18n="anatomyModel">ANATOMY GUIDE</span><span id="stagePartLabel">WAIST</span></div>
+            <div class="anatomy-viewport" id="anatomyViewport">
+              <div class="anatomy-figure" id="anatomyFigure">
+                <img id="anatomyImage" src="./assets/anatomy-reference.jpg" width="1008" height="1792" alt="Full-body anatomical illustration" draggable="false" decoding="async" />
+                <svg id="anatomyOverlay" viewBox="0 0 1008 1792" aria-hidden="true" focusable="false">
+                  <ellipse id="tapeBack" fill="none" stroke="#13786c" stroke-width="5" stroke-dasharray="9 7" opacity=".55" />
+                  <ellipse id="tapeBand" fill="#3bc7af" fill-opacity=".12" stroke="none" />
+                  <path id="tapeFront" fill="none" stroke="#11786c" stroke-width="9" stroke-linecap="round" />
+                  <path id="tapeLeader" fill="none" stroke="#11786c" stroke-width="3" />
+                  <circle id="tapeDot" r="6" fill="#11786c" />
+                </svg>
+                <span id="anatomyCallout" class="anatomy-callout" aria-hidden="true">Waist</span>
+                <div id="anatomyHotspots"></div>
+              </div>
             </div>
-            <div class="rotate-hint" data-i18n="dragRotate">Drag to rotate</div>
+            <div id="modelStatus" class="model-status" role="status" aria-live="polite"><span class="loader"></span><span id="modelStatusText" data-i18n="loadingModel">Loading anatomy illustration…</span><button id="retryModel" class="secondary hidden" type="button" data-i18n="retryModel">Try again</button></div>
+            <div class="anatomy-controls" role="group" aria-label="Image zoom">
+              <span data-i18n="anatomyHint">Select a measurement to see the tape position</span>
+              <div><button id="anatomyZoomOut" type="button" aria-label="Zoom out">−</button><button id="anatomyZoomReset" type="button" aria-label="Reset zoom">1×</button><button id="anatomyZoomIn" type="button" aria-label="Zoom in">+</button></div>
+            </div>
           </div>
           <div class="guide-info">
             <div class="guide-info-top"><span class="guide-step" id="guideStep">03</span><div id="guidePartTitle" class="guide-title">Waist</div><span class="guide-tape" aria-hidden="true">↔</span></div>
@@ -195,8 +207,8 @@
   </form>
 </dialog>
 
-<script src="./app.js?v=4"></script>
-<script src="./units.js?v=4"></script>
-<script src="./studio.js?v=4"></script>
+<script src="./app.js?v=5"></script>
+<script src="./units.js?v=5"></script>
+<script src="./studio.js?v=5"></script>
 </body>
 </html>

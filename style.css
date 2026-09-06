@@ -6,3 +6,31 @@
 @media(max-width:650px){.app-shell{padding:0 16px 120px}.topbar{height:87px;margin-bottom:24px}.brand{font-size:23px}.brand small{font-size:8px;letter-spacing:1.8px}.brand-mark{width:41px;height:41px;font-size:31px;border-radius:12px}.page-title-row{margin-bottom:21px}.page-title-row h2{font-size:27px}.overview-grid{grid-template-columns:1fr;gap:14px}.hero-card{min-height:278px;padding:23px 25px}.hero-value{font-size:80px}.metric-grid{gap:10px}.metric-card{padding:20px;min-height:135px}.metric-card:before{margin-bottom:14px}.metric-card strong{font-size:26px}.section-card,.form-card{padding:20px}.measurement-workspace{grid-template-columns:1fr;gap:18px}.guide-card{position:static;padding:0}.guide-head{padding:22px 22px 0}.guide-badge{font-size:11px}.body-stage{height:430px}.guide-info{padding:20px 22px 12px}.guide-chips{padding:10px 22px 16px;grid-template-columns:repeat(3,1fr)}.model-note{padding-left:22px;padding-right:22px}.form-grid{gap:20px 16px}.form-heading{margin-bottom:22px}.where-btn{position:absolute;top:-3px;right:-4px;padding:5px;min-height:28px}.measure-label label{padding-right:65px}.measure-label input{margin-top:7px}.form-grid input{font-size:17px}.history-item{padding:20px}.history-top{flex-direction:column;gap:17px}.history-values{gap:30px}.history-values>div{display:flex;align-items:baseline;gap:7px}.guide-subtitle{max-width:245px}.section-head{flex-wrap:wrap}.calc-preview span{font-size:12px}.eyebrow{font-size:11px}.view-controls button{min-height:36px}.rotate-hint{bottom:56px}}
 @media(max-width:370px){.where-btn{position:static;padding:1px 0;display:block}.measure-label label{padding-right:0}.brand small{display:none}.body-stage{height:395px}.guide-head{padding-left:16px;padding-right:16px}.guide-subtitle{font-size:13px}.guide-badge{font-size:10px}.hero-footer{font-size:10px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* Anatomy image: a calm light viewing surface with one measurement at a time. */
+.anatomy-stage{height:auto;background:#eef3ef;isolation:isolate;overflow:hidden}
+.anatomy-stage .stage-header{color:#61756d;top:18px;font-size:11px;letter-spacing:.08em;z-index:3}
+.anatomy-stage .stage-header span:last-child{color:#13786c;font-weight:600;letter-spacing:0}
+.anatomy-viewport{height:550px;overflow:hidden;padding:36px 0 8px;display:flex;justify-content:center;align-items:center;touch-action:pan-y}
+.anatomy-figure{height:100%;aspect-ratio:1008/1792;position:relative;flex:none;max-width:100%;transition:transform .3s ease,transform-origin .3s ease}
+.anatomy-figure>img{display:block;width:100%;height:100%;object-fit:contain;opacity:.74;mix-blend-mode:multiply;user-select:none;-webkit-user-drag:none;pointer-events:none;
+/* Display crop keeps the supplied anatomy and removes surrounding organ labels.
+   The original uploaded image is preserved byte-for-byte in assets/. */
+clip-path:polygon(46% 1.4%,53% 1.6%,57% 3.6%,59% 7%,58% 11%,56% 14%,57% 16.3%,62% 17.2%,65.5% 18.2%,68% 20.5%,70% 25%,71% 29%,73% 35%,75% 40%,77% 44.5%,82% 47%,86% 50%,87% 51%,85% 51.5%,82% 49.7%,83% 52%,81% 54.5%,79% 54.5%,78% 52%,76% 53%,73% 51.5%,72% 47%,69% 43%,67% 39%,65% 34%,65.5% 42%,65% 50%,64% 56%,62% 63%,61% 70%,59% 76%,57% 82%,56.5% 86%,60% 89.5%,63.5% 92%,63% 95%,60% 96%,55% 95%,53% 91%,52% 86%,50.5% 80%,50% 76%,51% 72%,51.5% 66%,51% 62%,49% 55%,48% 60%,47% 66%,47.5% 72%,46% 78%,44.5% 84%,44.5% 89%,43% 94%,41% 96%,38% 96.5%,35% 95.5%,35% 92.5%,39% 88%,39% 84%,37% 78%,36% 72%,35% 66%,33% 61%,31% 53%,31% 47%,32% 41%,33% 34%,30% 39%,28% 43%,26% 46%,25% 50%,22% 52%,19% 54%,17% 54%,16% 52%,17% 50%,15% 51%,13% 50.5%,14% 49%,18% 46%,22% 44%,24% 39%,25% 34%,27% 28%,29% 23%,32% 19%,37% 17%,42% 16%,43% 14%,40% 13%,39% 11.5%,37% 10.5%,38% 8%,40% 6%,42% 3%)}
+#anatomyOverlay{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.anatomy-callout{position:absolute;transform:translateY(-50%);padding:5px 9px;background:#fff;border:1px solid #abc6bd;border-radius:7px;color:#11695f;font-size:13px;font-weight:600;line-height:1.5;white-space:nowrap;box-shadow:0 2px 10px #244b3a0c;pointer-events:none}
+.anatomy-callout.callout-left{transform:translate(-100%,-50%)}
+.anatomy-hotspot{position:absolute;min-height:24px;background:transparent;border:0;padding:0;border-radius:50%;cursor:pointer}
+.anatomy-hotspot:hover{background:#13786c12}.anatomy-hotspot:focus-visible{outline:2px solid #13786c;outline-offset:3px;background:#13786c12}
+.anatomy-controls{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 18px;background:#e6ede7;border-top:1px solid #d4dfd6;position:relative;z-index:4}
+.anatomy-controls>span{font-size:12px;line-height:1.6;color:#486254;max-width:220px}
+.anatomy-controls>div{display:flex;gap:3px;padding:3px;border:1px solid #c8d6cd;border-radius:9px;background:#f6f9f5;flex-shrink:0}
+.anatomy-controls button{border:0;background:transparent;color:#244e3f;min-width:32px;min-height:32px;padding:3px 7px;border-radius:6px;font-size:18px;line-height:1}
+.anatomy-controls button:nth-child(2){font-size:12px;font-weight:600;min-width:35px}
+.anatomy-controls button:disabled{opacity:.35;cursor:default}
+.anatomy-controls button:hover:not(:disabled){background:#dce9db}
+.anatomy-stage .model-status{background:#eef3eff5;color:#416254;bottom:65px}
+.anatomy-stage .loader{border-color:#c5d7c8;border-top-color:#13786c}
+@media(max-width:1199px) and (min-width:651px){.anatomy-viewport{height:500px}.anatomy-controls{padding:10px 12px;gap:7px}.anatomy-controls>span{font-size:11px}}
+@media(max-width:650px){.body-stage.anatomy-stage{height:auto}.anatomy-viewport{height:520px}.anatomy-controls{padding:12px 16px}.anatomy-controls button{min-height:36px;min-width:34px}.anatomy-callout{font-size:12px;padding:5px 7px}}
+@media(max-width:370px){.anatomy-viewport{height:460px}.anatomy-controls>span{font-size:11px}.anatomy-callout{font-size:11px}}

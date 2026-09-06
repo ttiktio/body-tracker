@@ -29,16 +29,16 @@
 ## Important
 ค่า Body Fat เป็นค่าประมาณ ไม่ใช่ผลตรวจทางการแพทย์
 
-## 3D Studio redesign
+## Anatomy image guide
 
-The measurement screen now uses a real MakeHuman anatomical mesh with local Three.js rendering, studio lighting, soft shadows, subtle breathing, touch rotation, zoom, keyboard controls, and front/side/back views. Tap the body, choose a measurement chip, or focus a measurement field to move the tape. The tape follows a cross-section of the mesh; female settings move the waist guide to the natural waist. The neutral reference mannequin is not generated from the user's measurements.
+The default measurement guide uses the owner's supplied anatomy illustration, displayed at 74% opacity on a pale background. A CSS display crop suppresses peripheral organ labels. The original image is preserved unchanged. The view highlights one tape location at a time for neck, chest, waist, hip, upper arm, or thigh. Select a chip, tap a landmark, or focus a measurement field to update it. Zoom controls enlarge the selected area up to 2× and reset to the full body. Female settings move the waist marker to the natural waist.
 
-All 3D assets are included in this repository (about 2.1 MB total before compression). No CDN, account, API key, or build step is required. The model loads only when opening measurements. Rendering pauses offscreen and in background tabs, with reduced-motion support. If WebGL or asset loading fails, the written guide and tracker remain available with a retry button.
+This is a front-view illustration rather than a rotatable 3D model. The current page does not import WebGL code or precache its mesh/library. The reference JPEG is about 339 KB. If the image fails to load, its overlay is hidden, the written instructions remain usable, and a retry button appears.
 
-Existing storage keys, mixed units (height in cm, circumferences in inches, weight in kg), Thai/English, history editing, charts, backups, and PWA support are preserved. Chart backing-store height is now stable across repeated redraws on high-DPI devices. The service-worker cache is versioned, and it only removes caches belonging to this app.
+Existing local data, Thai/English, height in cm, circumferences in inches, weight in kg, history editing, charts, backups, and PWA functionality are retained. The high-DPI chart height fix remains. Cache version 5 loads the new image guide.
 
 ### Checks
 
-- `node tools/check-guide.mjs` — validates the source mesh and all male/female measurement contours (Node 22+).
-- `node --check app.js`, `node --check units.js`, `node --check studio.js`, `node --check body3d.js`, `node --check sw.js` — JavaScript syntax checks.
-- Asset provenance and reproduction: [assets/ATTRIBUTION.md](assets/ATTRIBUTION.md).
+- `node --check app.js`, `node --check units.js`, `node --check studio.js`, `node --check sw.js` — active JavaScript syntax checks.
+- Image provenance and earlier model licenses: [assets/ATTRIBUTION.md](assets/ATTRIBUTION.md).
+- `node tools/check-guide.mjs` validates the retained, inactive 3D mesh; it is not a test of the current image-based interface.

@@ -1,8 +1,7 @@
-const CACHE = 'body-tracker-v4-studio';
+const CACHE = 'body-tracker-v5-anatomy';
 const ASSETS = [
-  './', './index.html', './style.css?v=4', './app.js?v=4', './units.js?v=4',
-  './studio.js?v=4', './body3d.js?v=4', './vendor/three.module.js',
-  './vendor/OrbitControls.js', './assets/human.json', './manifest.json',
+  './', './index.html', './style.css?v=5', './app.js?v=5', './units.js?v=5',
+  './studio.js?v=5', './assets/anatomy-reference.jpg', './manifest.json',
   './icon-192.svg', './icon-512.svg'
 ];
 self.addEventListener('install', event => {
